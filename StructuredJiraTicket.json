@@ -1,0 +1,37 @@
+{
+    "metadata": {
+        "Ticket ID": "PRINTER-1001",
+        "Summary": "PrinterService crashes during high-volume print jobs",
+        "Environment": "Production",
+        "Version": "v3.2.1",
+        "Priority": "Critical",
+        "Status": "In Progress",
+        "Assignee": "Alice",
+        "Reporter": "QA-Team",
+        "Created": "2023-11-15",
+        "Updated": "2023-11-18"
+    },
+    "content": {
+        "Description": "During peak hours, PrinterService crashes intermittently when processing large batches of print jobs (>500 pages). The issue occurs after approximately 20 minutes of continuous operation. Users report that the printer stops responding and jobs remain in the queue indefinitely.\nSteps to Reproduce:\n1. Log in to PrinterService dashboard.\n2. Submit a batch print job with 500+ pages.\n3. Observe system behavior after 15-20 minutes.",
+        "Observed Behavior": "- PrinterService process terminates unexpectedly.\n- No error message displayed to the user.\n- Print queue shows jobs as 'In Progress' indefinitely.",
+        "Expected Behavior": "- PrinterService should handle high-volume jobs without crashing.\n- Jobs should complete successfully or fail gracefully with an error message.",
+        "Error Pattern": "System.OutOfMemoryException: Insufficient memory to continue execution of the program.",
+        "Logs Snippet": "2023-11-15 14:32:10 [ERROR] [PrinterService] OutOfMemoryException occurred in PrintJobHandler.\nCorrelationId=987654321 Host=prod-node-3 ThreadId=456\nContext: file=src/PrinterService/Handlers/PrintJobHandler.cs class=PrintJobHandler method=ProcessBatchAsync lines=145-210",
+        "Stack Trace": "System.OutOfMemoryException: Insufficient memory to continue execution of the program.\n   at Contoso.Printers.Raster.BitmapRasterizer.RasterizeAsync() in BitmapRasterizer.cs:line 177\n   at Contoso.Printers.Core.PrintJobHandler.ProcessBatchAsync() in PrintJobHandler.cs:line 188\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor+TaskOfIActionResultExecutor.Execute()"
+    },
+    "code_location": {
+        "Repository": "git@github.com:contoso-printers/PrinterService.git",
+        "Branch": "main",
+        "Commit ID": "a1b2c3d4e5f6",
+        "File Path": "src/PrinterService/Handlers/PrintJobHandler.cs",
+        "Namespace": "Contoso.Printers.Core",
+        "Class": "PrintJobHandler",
+        "Method": "ProcessBatchAsync",
+        "Lines": "145-210"
+    },
+    "attachments": [
+        "error.log",
+        "stacktrace.txt",
+        "memory_dump.dmp"
+    ]
+}
